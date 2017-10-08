@@ -1,0 +1,36 @@
+#define F_CPU 8000000L
+#include <avr/io.h>
+#include <util/delay.h>
+
+#define LED PB0
+#define LED_ON() PORTB |= (1 << LED)
+#define LED_OFF() PORTB &= ~(1 << LED)
+
+int main(void)
+{
+   
+	
+	DDRB  = 0xFF; // B лампочки 0,1 выходы
+	DDRD  = 0b00000011; // D кнопки 0,1 входы
+	PORTB = 0b00000000; // логические
+	PORTD = 0b00000011; // потивающие 1
+	unsigned char i = 0; // Status
+	
+    while (1) 
+    {
+		
+		if (!(PIND&(1 << PD0))) // проверяем значение кнопки
+		{
+			if (i == 0) //проверяем статус
+			{
+				LED_ON(); //вкл
+				i = 1; // статус вкл
+				_delay_ms(100); // задержка
+			} 
+			else
+			{
+				LED_OFF();
+				i = 0;
+				_delay_ms(100);
+			}
+		}
